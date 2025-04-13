@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="./stylesheet/style.css">
+</head>
+<body>
+  <h2>Welcome Admin</h2>
+  <div id="admin-stats">
+    <p>Total Users: <span id="total-users"></span></p>
+    <p>Total Jobs: <span id="total-jobs"></span></p>
+    <p>Total Applications: <span id="total-applications"></span></p>
+
+
+    <h3>Manage Users</h3>
+<ul id="user-list"></ul>
+
+<h3>Manage Jobs</h3>
+<ul id="job-list"></ul>
+  </div>
+
+  <script src="./script/script.js"></script>
+  <script>
+    fetchAdminStats();
+  </script>
+</body>
+</html>

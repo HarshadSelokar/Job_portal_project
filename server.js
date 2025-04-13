@@ -8,8 +8,13 @@ const applicationRoutes = require('./routes/applicationRoutes.js');
 
 const app = express();
 const PORT = 5500;
+app.use(express.json());
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
 
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/api/admin', adminRoutes);
 
 app.use('/api', userRoutes);
 app.use('/api', jobRoutes);
@@ -17,7 +22,7 @@ app.use('/api', applicationRoutes);
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static("public"));
+// app.use(express.static('public'));
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Online Job Portal Backend");
