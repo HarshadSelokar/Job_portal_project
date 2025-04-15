@@ -30,13 +30,23 @@ function register() {
       if (data.user) {
         alert(`Welcome ${data.user.name} (${data.user.user_type})`);
         localStorage.setItem('user', JSON.stringify(data.user));
-        window.location.href = data.user.user_type === 'employer' ? '/post-job.html' : '/jobs.html';
+  
+        // Redirect based on user type
+        if (data.user.user_type === 'admin') {
+          window.location.href = '/admin-dashboard.html';
+        } else if (data.user.user_type === 'employer') {
+          window.location.href = '/post-job.html';
+        } else {
+          window.location.href = '/jobs.html';
+        }
+  
       } else {
         alert(data.error);
       }
     })
     .catch(err => console.error(err));
   }
+  
   
 
 
@@ -86,20 +96,28 @@ function register() {
       .then(res => res.json())
       .then(jobs => {
         const container = document.getElementById('jobs-container');
-        container.innerHTML = ''; // Clear previous jobs
+        container.innerHTML = '';
   
         jobs.forEach(job => {
-          const jobElement = document.createElement('div');
-          jobElement.classList.add('job-card');
-          jobElement.innerHTML = `
-            <h3>${job.title}</h3>
-            <p><strong>Company:</strong> ${job.company}</p>
-            <p>${job.description}</p>
-            <p><strong>Location:</strong> ${job.location}</p>
-            <p><strong>Salary:</strong> $${job.salary}</p>
-            <button onclick="applyForJob(${job.id})">Apply Now</button>
+          const card = document.createElement('div');
+          card.className = 'col-md-4';
+  
+          card.innerHTML = `
+            <div class="card shadow-sm h-100">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="card-title">${job.title}</h5>
+                 
+                  <p class="card-text">${job.description}</p>
+                  <p class="card-text"><strong>Location:</strong> ${job.location}</p>
+                  <p class="card-text"><strong>Salary:</strong> ₹${job.salary}</p>
+                </div>
+                <button class="btn btn-primary mt-3" onclick="applyForJob(${job.id})">Apply Now</button>
+              </div>
+            </div>
           `;
-          container.appendChild(jobElement);
+  
+          container.appendChild(card);
         });
       })
       .catch(err => console.error('Error fetching jobs:', err));
@@ -151,25 +169,31 @@ function register() {
         container.innerHTML = '';
   
         if (applicants.length === 0) {
-          container.innerHTML = '<p>No applicants yet.</p>';
+          container.innerHTML = '<p class="text-center text-muted">No applicants yet.</p>';
           return;
         }
   
         applicants.forEach(app => {
-          const card = document.createElement('div');
-          card.classList.add('applicant-card');
-          card.innerHTML = `
-            <h3>${app.name}</h3>
-            <p><strong>Email:</strong> ${app.email}</p>
-            <p><strong>Applied For:</strong> ${app.job_title}</p>
-            <p><strong>Application Date:</strong> ${new Date(app.application_date).toLocaleDateString()}</p>
+          const div = document.createElement('div');
+          div.className = 'col-md-4';
+  
+          div.innerHTML = `
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title">${app.applicant_name}</h5>
+                <p class="card-text"><strong>Email:</strong> ${app.email}</p>
+                <p class="card-text"><strong>Applied For:</strong> ${app.job_title}</p>
+                <p class="card-text text-muted"><strong>Applied On:</strong> ${new Date(app.application_date).toLocaleDateString()}</p>
+              </div>
+            </div>
           `;
-          container.appendChild(card);
+  
+          container.appendChild(div);
         });
       })
       .catch(err => console.error('Error fetching applicants:', err));
   }
-
+   
   
   // THIS IS FOR FETCHING THE APPLICATION FOR JOB SEEKERS THEY HAVE APPLIED  
 
@@ -188,23 +212,29 @@ function register() {
         container.innerHTML = '';
   
         if (apps.length === 0) {
-          container.innerHTML = '<p>You have not applied to any jobs yet.</p>';
+          container.innerHTML = '<p class="text-center text-muted">You have not applied to any jobs yet.</p>';
           return;
         }
   
         apps.forEach(app => {
           const div = document.createElement('div');
-          div.classList.add('job-card');
+          div.className = 'col-md-4';
+  
           div.innerHTML = `
-            <h3>${app.title}</h3>
-            <p><strong>Company:</strong> ${app.company}</p>
-            <p><strong>Location:</strong> ${app.location}</p>
-            <p><strong>Applied on:</strong> ${new Date(app.application_date).toLocaleDateString()}</p>
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title">${app.title}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">${app.company}</h6>
+                <p class="card-text"><strong>Location:</strong> ${app.location}</p>
+                <p class="card-text text-muted"><strong>Applied on:</strong> ${new Date(app.application_date).toLocaleDateString()}</p>
+              </div>
+            </div>
           `;
+  
           container.appendChild(div);
         });
       })
-      .catch(err => console.error('Error fetching my applications:', err));
+      .catch(err => console.error('Error fetching applications:', err));
   }
   
 
@@ -232,7 +262,7 @@ function register() {
   }
   
 
-  // THIS IS  FETCH ADMIN STATUS 
+  // THIS IS  FETCH ADMIN STATUS AND DELETE BUTTON 
   function loadUsers() {
     fetch('/api/admin/users')
       .then(res => res.json())
@@ -243,8 +273,11 @@ function register() {
           const li = document.createElement('li');
           li.innerHTML = `
             ${user.name} (${user.email}) - ${user.user_type}
-            <button onclick="deleteUser(${user.id})">Delete</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id})">Delete</button>
+            
           `;
+          li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+
           list.appendChild(li);
         });
       });
@@ -259,9 +292,13 @@ function register() {
         jobs.forEach(job => {
           const li = document.createElement('li');
           li.innerHTML = `
-            ${job.title} @ ${job.company}
-            <button onclick="deleteJob(${job.id})">Delete</button>
+            ${job.title} 
+           
+            <button class="btn btn-danger btn-sm" onclick="deleteUser(${job.id})">Delete</button>
+
           `;
+          li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+
           list.appendChild(li);
         });
       });
@@ -269,7 +306,15 @@ function register() {
   
   function deleteUser(id) {
     fetch(`/api/admin/users/${id}`, { method: 'DELETE' })
-      .then(() => loadUsers());
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to delete user');
+        return res.json();
+      })
+      .then(() => {
+        alert('User deleted');
+        loadUsers();  
+      })
+      .catch(err => console.error('Delete User Error:', err));
   }
   
   function deleteJob(id) {

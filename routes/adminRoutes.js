@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const db = require('../db/db.js');
 
 // Admin stats
 router.get('/stats', (req, res) => {
@@ -33,12 +33,18 @@ router.get('/users', (req, res) => {
   // Delete user
   router.delete('/users/:id', (req, res) => {
     const id = req.params.id;
-    db.query("DELETE FROM users WHERE id = ?", [id], (err) => {
-      if (err) return res.status(500).json({ error: 'Error deleting user' });
-      res.sendStatus(200);
+    const sql = 'DELETE FROM users WHERE id = ?';
+  
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error('Error deleting user:', err);
+        res.status(500).json({ error: 'Failed to delete user' });
+      } else {
+        res.json({ message: 'User deleted successfully' });
+      }
     });
   });
-  
+
   // Get all jobs
   router.get('/jobs', (req, res) => {
     db.query("SELECT * FROM jobs", (err, result) => {
@@ -49,11 +55,17 @@ router.get('/users', (req, res) => {
   
   // Delete job
   router.delete('/jobs/:id', (req, res) => {
-    const id = req.params.id;
-    db.query("DELETE FROM jobs WHERE id = ?", [id], (err) => {
-      if (err) return res.status(500).json({ error: 'Error deleting job' });
-      res.sendStatus(200);
-    });
+   const id = req.params.id;
+  const sql = 'DELETE FROM jobs WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Error deleting user:', err);
+      res.status(500).json({ error: 'Failed to delete user' });
+    } else {
+      res.json({ message: 'User deleted successfully' });
+    }
+  });
   });
   
 

@@ -1,33 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Online Job Portal - Login/Register</title>
-  <link rel="stylesheet" href="./stylesheet/style.css">
-</head>
-<body>
-  <h2>Online Job Portal</h2>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{
+      position: relative;
+      bottom: 9rem;
+    }
+    .flip-card {
+      background-color: transparent;
+      perspective: 1000px;
+      width: 100%;
+    }
 
-  <div id="forms-container">
-    <div>
-        <h3>Register</h3>
-        <input type="text" id="reg_name" placeholder="Name" />
-        <input type="email" id="reg_email" placeholder="Email" />
-        <input type="password" id="reg_password" placeholder="Password" />
-        <select id="reg_user_type">
-          <option value="job_seeker">Job Seeker</option>
-          <option value="employer">Employer</option>
-        </select>
-        <button onclick="register()">Register</button>
-      </div>
-      <div>
-        <h3>Login</h3>
-        <input type="email" id="login_email" placeholder="Email" />
-        <input type="password" id="login_password" placeholder="Password" />
-        <button onclick="login()">Login</button>
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      backface-visibility: hidden;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background: #fff;
+    }
+
+    .flip-card-back {
+      transform: rotateY(180deg);
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: #0d6efd;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100">
+
+  <div class="container p-4 bg-white rounded shadow" style="max-width: 500px;">
+    <h2 class="text-center text-primary mb-4">Online Job Portal</h2>
+
+    <div class="flip-card" id="flipCard">
+      <div class="flip-card-inner">
+
+        <!-- Register Form (Back Side) -->
+        <div class="flip-card-back">
+          <h4 class="text-success">Register</h4>
+          <div class="mb-3">
+            <input type="text" class="form-control" id="reg_name" placeholder="Name" />
+          </div>
+          <div class="mb-3">
+            <input type="email" class="form-control" id="reg_email" placeholder="Email" />
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" id="reg_password" placeholder="Password" />
+          </div>
+          <div class="mb-3">
+            <select class="form-select" id="reg_user_type">
+              <option value="job_seeker">Job Seeker</option>
+              <option value="employer">Employer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button class="btn btn-success w-100" onclick="register()">Register</button>
+          <button class="toggle-btn" onclick="toggleFlip()">Already have an account? Login</button>
+        </div>
+
+        <!-- Login Form (Front Side) -->
+        <div class="flip-card-front">
+          <h4 class="text-primary">Login</h4>
+          <div class="mb-3">
+            <input type="email" class="form-control" id="login_email" placeholder="Email" />
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" id="login_password" placeholder="Password" />
+          </div>
+          <button class="btn btn-primary w-100" onclick="login()">Login</button>
+          <button class="toggle-btn" onclick="toggleFlip()">Don't have an account? Register</button>
+        </div>
+
       </div>
     </div>
-  
-    <script src="./script/script.js"></script>
-  </body>
-  </html>  
+  </div>
+
+  <script>
+    function toggleFlip() {
+      const card = document.getElementById('flipCard');
+      card.classList.toggle('flipped');
+    }
+  </script>
+  <script src="./script/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
