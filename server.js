@@ -5,6 +5,7 @@ const db = require("./db/db.js");
 const userRoutes = require('./routes/userRoutes.js');
 const jobRoutes = require('./routes/jobRoutes.js');
 const applicationRoutes = require('./routes/applicationRoutes.js');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = 5500;
@@ -13,7 +14,6 @@ app.use(express.json());
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 
-const adminRoutes = require('./routes/adminRoutes');
 app.use('/api/admin', adminRoutes);
 
 app.use('/api', userRoutes);

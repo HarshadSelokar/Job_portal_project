@@ -273,7 +273,7 @@ function register() {
           const li = document.createElement('li');
           li.innerHTML = `
             ${user.name} (${user.email}) - ${user.user_type}
-            <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id})">Delete</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.user_id})">Delete</button>
             
           `;
           li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
@@ -288,17 +288,15 @@ function register() {
       .then(res => res.json())
       .then(jobs => {
         const list = document.getElementById('job-list');
+        
         list.innerHTML = '';
         jobs.forEach(job => {
           const li = document.createElement('li');
+          li.className = 'list-group-item d-flex justify-content-between align-items-center';
           li.innerHTML = `
             ${job.title} 
-           
-            <button class="btn btn-danger btn-sm" onclick="deleteUser(${job.id})">Delete</button>
-
+            <button class="btn btn-danger btn-sm" onclick="deleteJob(${job.job_id})">Delete</button>
           `;
-          li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-
           list.appendChild(li);
         });
       });
@@ -316,6 +314,8 @@ function register() {
       })
       .catch(err => console.error('Delete User Error:', err));
   }
+
+  
   
   function deleteJob(id) {
     fetch(`/api/admin/jobs/${id}`, { method: 'DELETE' })
