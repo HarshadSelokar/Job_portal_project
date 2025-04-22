@@ -66,7 +66,7 @@ Relationships:
 - Users `applies` Applications  
 - Jobs `receives` Applications
 
-> *(You can upload a screenshot or link of your ERDPlus diagram here)*
+> 
 
 ---
 
@@ -86,9 +86,7 @@ Relationships:
 git clone https://github.com/yourusername/online-job-portal.git
 cd online-job-portal
 2. Install Dependencies
-bash
-Copy
-Edit
+```bash
 npm install
 3. Configure MySQL
 Create a DB named job_portal
